@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Volunteers from "./pages/Volunteers";
 import VolunteerProfile from "./pages/VolunteerProfile";
 import Dashboard from "./pages/Dashboard";
+import Misi from "./pages/Misi";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/volunteers" element={<Volunteers />} />
           <Route path="/volunteer/:id" element={<VolunteerProfile />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/daftar_misi" element={<Misi/>} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

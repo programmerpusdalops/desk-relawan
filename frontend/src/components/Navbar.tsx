@@ -3,9 +3,13 @@ import { motion } from "framer-motion";
 import { Shield, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import logoBPBD from '../assets/bpbd.png';
+import logoSulteng from '../assets/sulteng.png'
 
 const navItems = [
   { label: "Beranda", path: "/" },
+  { label: "Daftar Misi", path: "/daftar_misi" },
+  { label: "Petakan Misimu", path: "/peta_misi" },
   { label: "Daftar Relawan", path: "/register" },
   { label: "Database", path: "/volunteers" },
   { label: "Dashboard", path: "/dashboard" },
@@ -21,20 +25,21 @@ export const Navbar = () => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-colors ${
-        isLanding ? "bg-transparent" : "gradient-navy shadow-lg"
+        isLanding ? "bg-navy" : "gradient-navy shadow-lg"
       }`}
     >
-      <div className="container mx-auto flex items-center justify-between py-4 px-4">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
-            <Shield className="h-6 w-6 text-accent-foreground" />
+      <div className="container mx-auto flex items-center justify-between py-1 px-1">
+        <Link to="/" className="flex items-center gap-5">
+          <div className="mx-auto mb-2 flex h-16 w-16 gap-2 items-center justify-center ">
+            <img className="h-10 w-10" src={logoSulteng}/>
+            <img className="h-10 w-10" src={logoBPBD}/>
           </div>
-          <div className="leading-tight">
-            <span className="block text-sm font-extrabold text-primary-foreground tracking-wide">
-              SIGAP RELAWAN
+          <div className="leading-tight mb-2">
+            <span className=" text-sm font-extrabold text-primary-foreground tracking-wide">
+              DESK RELAWAN
             </span>
             <span className="block text-[10px] font-medium text-primary-foreground/70 tracking-widest uppercase">
-              Sulawesi Tengah
+              Bpbd Provinsi Sulawesi Tengah
             </span>
           </div>
         </Link>

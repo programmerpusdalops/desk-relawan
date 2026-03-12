@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Shield, Users, ClipboardCheck, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/BERANI_TANGGUH.png";
 
 const stats = [
   { icon: Users, value: "2,847", label: "Total Relawan" },
@@ -26,16 +26,16 @@ export const HeroSection = () => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold text-accent mb-6">
+          {/* <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold text-accent mb-6">
             <Shield className="h-3.5 w-3.5" />
-            BPBD Provinsi Sulawesi Tengah
-          </span>
+            PUSDALOPS - PENANGGULANGAN BENCANA
+          </span> */}
           <h1 className="text-4xl md:text-6xl font-extrabold text-primary-foreground leading-tight mb-6">
-            SIGAP RELAWAN{" "}
-            <span className="text-gradient-orange">SULTENG</span>
+            DESK RELAWAN{" "}
+            <br></br><span className="text-gradient-orange">SULTENG</span>
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/70 leading-relaxed mb-8 max-w-2xl">
-            Sistem Informasi Gerakan dan Penugasan Relawan — Platform digital
+            Desk Relawan Bpbd Sulteng — Platform digital
             untuk kesiapsiagaan dan manajemen penugasan relawan penanggulangan
             bencana Provinsi Sulawesi Tengah.
           </p>
@@ -56,7 +56,7 @@ export const HeroSection = () => (
             <Button
               size="lg"
               variant="outline"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold text-base px-8"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold text-black px-8"
             >
               Lihat Dashboard
             </Button>
