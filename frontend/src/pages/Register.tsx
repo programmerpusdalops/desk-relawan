@@ -9,6 +9,8 @@ import { Shield, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { mockKeahlian, mockOrganisasi } from '@/lib/mockData';
 
+import apiClient from '@/lib/api';
+
 /**
  * Registrasi Relawan
  * API ENDPOINT: POST /api/relawan/register
@@ -45,11 +47,33 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      toast({ title: 'Registrasi Berhasil', description: 'Akun Anda sedang menunggu verifikasi admin.' });
-      setLoading(false);
+    try {
+      // Execute Real Backend Registration
+      const response = await apiClient.post('/relawan/register', {
+        nama_lengkap: form.nama_lengkap,
+        email: form.email,
+        password: form.password,
+        nik: form.nik,
+        nomor_hp: form.nomor_hp,
+        alamat: form.alamat,
+        organisasi_id: form.organisasi_id || undefined,
+        keahlian_ids: form.keahlian_ids
+      });
+
+      toast({ 
+        title: 'Registrasi Berhasil', 
+        description: response.data.message || 'Akun Anda sedang menunggu verifikasi admin.' 
+      });
       navigate('/login');
-    }, 1000);
+    } catch (error: any) {
+      toast({ 
+        title: 'Registrasi Gagal', 
+        description: error.response?.data?.message || 'Terjadi kesalahan pada server. Coba lagi.', 
+        variant: 'destructive' 
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

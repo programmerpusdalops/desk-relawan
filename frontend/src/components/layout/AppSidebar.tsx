@@ -17,7 +17,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { title: 'Dashboard', url: '/', icon: LayoutDashboard, roles: ['admin', 'operator', 'relawan'] },
+  { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'operator', 'relawan'] },
   { title: 'Data Relawan', url: '/relawan', icon: Users, roles: ['admin', 'operator'] },
   { title: 'Data Organisasi', url: '/organisasi', icon: Building, roles: ['admin', 'operator'] },
   { title: 'Data Keahlian', url: '/keahlian', icon: Wrench, roles: ['admin'] },
@@ -29,8 +29,9 @@ const menuItems: MenuItem[] = [
   { title: 'Manajemen Logistik', url: '/logistik', icon: Package, roles: ['admin', 'operator'] },
   { title: 'Notifikasi', url: '/notifikasi', icon: Bell, roles: ['admin', 'operator', 'relawan'] },
   { title: 'Laporan & Statistik', url: '/statistik', icon: BarChart3, roles: ['admin', 'operator'] },
+  { title: 'Data Master Umum', url: '/master-data', icon: ClipboardList, roles: ['admin', 'operator', 'pimpinan'] },
   { title: 'Manajemen Pengguna', url: '/pengguna', icon: Settings, roles: ['admin'] },
-  { title: 'Profil', url: '/profil', icon: User, roles: ['admin', 'operator', 'relawan'] },
+  { title: 'Profil', url: '/profil', icon: User, roles: ['admin', 'operator', 'relawan', 'pimpinan'] },
 ];
 
 export function AppSidebar() {

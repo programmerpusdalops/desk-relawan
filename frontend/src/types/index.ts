@@ -1,50 +1,26 @@
-/**
- * Core Types for Sistem Desk Relawan BPBD
- * All interfaces match expected backend API responses
- */
+export interface NavigationItem {
+  name: string;
+  href: string;
+  icon: any;
+  current?: boolean;
+}
 
-export type UserRole = 'admin' | 'operator' | 'relawan';
-
+export type UserRole = 'admin' | 'operator' | 'relawan' | 'pimpinan';
+export type UserStatus = 'active' | 'inactive';
 export type VerificationStatus = 'pending' | 'approved' | 'rejected';
-
-export type VolunteerFieldStatus = 'siaga' | 'bertugas' | 'selesai';
-
 export type DisasterScale = 'kecil' | 'sedang' | 'besar';
-
 export type DisasterStatus = 'aktif' | 'tanggap_darurat' | 'pemulihan' | 'selesai';
+export type RequestStatus = 'open' | 'closed' | 'fulfilled';
+export type AssignmentStatus = 'aktif' | 'selesai' | 'dibatalkan';
+export type VolunteerFieldStatus = 'siaga' | 'bertugas' | 'selesai';
+export type KondisiLogistik = 'baik' | 'rusak_ringan' | 'rusak_berat';
 
 export interface User {
   id: string;
+  email: string;
   nama: string;
-  email: string;
   role: UserRole;
-  status: 'active' | 'inactive';
-  created_at: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user_id: string;
-  role: UserRole;
-  user: User;
-}
-
-export interface Relawan {
-  id: string;
-  user_id: string;
-  nama_lengkap: string;
-  email: string;
-  nik: string;
-  nomor_hp: string;
-  alamat: string;
-  organisasi_id?: string;
-  organisasi_nama?: string;
-  keahlian: Keahlian[];
-  status_verifikasi: VerificationStatus;
-  status_lapangan?: VolunteerFieldStatus;
-  latitude?: number;
-  longitude?: number;
-  foto?: string;
+  status: UserStatus;
   created_at: string;
 }
 
@@ -57,7 +33,6 @@ export interface Organisasi {
   dokumen_legalitas?: string;
   jumlah_anggota: number;
   status_verifikasi: VerificationStatus;
-  created_at: string;
 }
 
 export interface Keahlian {
@@ -65,6 +40,26 @@ export interface Keahlian {
   nama: string;
   kategori: string;
   deskripsi?: string;
+}
+
+export interface Relawan {
+  id: string;
+  user_id: string;
+  nama_lengkap: string;
+  email: string;
+  nik: string;
+  nomor_hp: string;
+  alamat: string;
+  organisasi_id?: string;
+  organisasi?: Organisasi; // Required to satisfy TS type checking
+  organisasi_nama?: string;
+  keahlian: Keahlian[];
+  status_verifikasi: VerificationStatus;
+  status_lapangan?: VolunteerFieldStatus;
+  latitude?: number;
+  longitude?: number;
+  foto?: string;
+  created_at: string;
 }
 
 export interface Bencana {
@@ -77,53 +72,50 @@ export interface Bencana {
   waktu_kejadian: string;
   skala_bencana: DisasterScale;
   status: DisasterStatus;
-  deskripsi_dampak: string;
-  created_at: string;
+  deskripsi_dampak?: string;
 }
 
 export interface PermintaanRelawan {
   id: string;
   bencana_id: string;
-  bencana_nama?: string;
   keahlian_id: string;
-  keahlian_nama?: string;
   jumlah_relawan: number;
   jumlah_terpenuhi: number;
   lokasi_penugasan: string;
   tanggal_mulai: string;
   tanggal_selesai: string;
   deskripsi_tugas: string;
-  status: 'open' | 'closed' | 'fulfilled';
-  created_at: string;
+  status: RequestStatus;
+  bencana?: Bencana;
+  keahlian?: Keahlian;
 }
 
 export interface Penugasan {
   id: string;
   bencana_id: string;
-  bencana_nama?: string;
   nama_tim: string;
   lokasi_penugasan: string;
   tanggal_mulai: string;
   tanggal_selesai: string;
-  anggota: Relawan[];
-  status: 'aktif' | 'selesai' | 'dibatalkan';
-  created_at: string;
+  status: AssignmentStatus;
+  bencana?: Bencana;
+  anggota?: Relawan[];
 }
 
 export interface LaporanKegiatan {
   id: string;
   relawan_id: string;
-  relawan_nama?: string;
   bencana_id: string;
-  bencana_nama?: string;
   judul_laporan: string;
   deskripsi: string;
   jumlah_penerima_bantuan: number;
   kendala_lapangan?: string;
-  foto_kegiatan?: string[];
+  foto_kegiatan?: any;
   latitude?: number;
   longitude?: number;
   created_at: string;
+  bencana_nama?: string;
+  relawan_nama?: string;
 }
 
 export interface Logistik {
@@ -132,8 +124,23 @@ export interface Logistik {
   kategori: string;
   stok: number;
   lokasi_penyimpanan: string;
-  kondisi: 'baik' | 'rusak_ringan' | 'rusak_berat';
-  created_at: string;
+  kondisi: KondisiLogistik;
+  created_at?: string;
+}
+
+export interface RelawanLokasi {
+  relawan_id: string;
+  nama: string;
+  latitude: number;
+  longitude: number;
+  status: VolunteerFieldStatus;
+}
+
+export interface MasterData {
+  id: string;
+  kategori: string;
+  nilai: string;
+  deskripsi?: string;
 }
 
 export interface Notifikasi {
@@ -157,12 +164,4 @@ export interface ActivityChartData {
   relawan_aktif: number;
   operasi: number;
   laporan: number;
-}
-
-export interface RelawanLokasi {
-  relawan_id: string;
-  nama: string;
-  latitude: number;
-  longitude: number;
-  status: VolunteerFieldStatus;
 }

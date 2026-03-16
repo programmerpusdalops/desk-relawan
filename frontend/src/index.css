@@ -1,9 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 @layer base {
   :root {
     --background: 210 40% 98%;
@@ -15,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 221 83% 53%;
+    --primary: 24 94% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96%;
@@ -30,7 +29,7 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --emergency: 24 94% 50%;
+    --emergency: 0 84% 60%;
     --emergency-foreground: 0 0% 100%;
 
     --success: 142 76% 36%;
@@ -41,26 +40,26 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 221 83% 53%;
+    --ring: 24 94% 50%;
 
     --radius: 0.5rem;
 
-    --brand-50: 214 100% 97%;
-    --brand-100: 214 95% 93%;
-    --brand-500: 221 83% 53%;
-    --brand-600: 224 76% 48%;
-    --brand-700: 226 71% 40%;
-    --brand-800: 224 64% 33%;
+    --brand-50: 24 100% 97%;
+    --brand-100: 24 95% 93%;
+    --brand-500: 24 94% 50%;
+    --brand-600: 24 90% 45%;
+    --brand-700: 24 85% 40%;
+    --brand-800: 24 80% 33%;
     --brand-900: 222 47% 11%;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary: 24 94% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 100% 97%;
-    --sidebar-accent-foreground: 221 83% 53%;
+    --sidebar-accent: 24 100% 97%;
+    --sidebar-accent-foreground: 24 94% 50%;
     --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-ring: 24 94% 50%;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);

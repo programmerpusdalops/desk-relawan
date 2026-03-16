@@ -1,0 +1,224 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  operator
+  relawan
+  pimpinan
+}
+
+enum UserStatus {
+  active
+  inactive
+}
+
+enum VerificationStatus {
+  pending
+  approved
+  rejected
+}
+
+enum DisasterScale {
+  kecil
+  sedang
+  besar
+}
+
+enum DisasterStatus {
+  aktif
+  tanggap_darurat
+  pemulihan
+  selesai
+}
+
+enum RequestStatus {
+  open
+  closed
+  fulfilled
+}
+
+enum AssignmentStatus {
+  aktif
+  selesai
+  dibatalkan
+}
+
+enum VolunteerFieldStatus {
+  siaga
+  bertugas
+  selesai
+}
+
+enum KondisiLogistik {
+  baik
+  rusak_ringan
+  rusak_berat
+}
+
+model User {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  password   String
+  nama       String
+  role       UserRole   @default(relawan)
+  status     UserStatus @default(inactive)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  relawanProfile Relawan?
+}
+
+model Relawan {
+  id                String             @id @default(uuid())
+  user_id           String             @unique
+  nama_lengkap      String
+  email             String             @unique
+  nik               String             @unique
+  nomor_hp          String
+  alamat            String
+  
+  organisasi_id     String?
+  organisasi        Organisasi?        @relation(fields: [organisasi_id], references: [id])
+  
+  keahlian          Keahlian[]         @relation("RelawanToKeahlian")
+  penugasan         Penugasan[]        @relation("RelawanToPenugasan")
+  laporan           LaporanKegiatan[]
+  
+  status_lapangan   VolunteerFieldStatus @default(siaga)
+  latitude          Float                @default(0.0)
+  longitude         Float                @default(0.0)
+  
+  status_verifikasi VerificationStatus @default(pending)
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Organisasi {
+  id                String             @id @default(uuid())
+  nama_organisasi   String
+  jenis_organisasi  String
+  alamat            String
+  nomor_kontak      String
+  dokumen_legalitas String?
+  jumlah_anggota    Int                @default(0)
+  status_verifikasi VerificationStatus @default(pending)
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+
+  relawan Relawan[]
+}
+
+model Keahlian {
+  id          String    @id @default(uuid())
+  nama        String
+  kategori    String
+  deskripsi   String?
+  
+  relawan     Relawan[] @relation("RelawanToKeahlian")
+  permintaan  PermintaanRelawan[]
+}
+
+model Bencana {
+  id               String         @id @default(uuid())
+  nama_bencana     String
+  jenis_bencana    String
+  lokasi           String
+  latitude         Float          @default(0.0)
+  longitude        Float          @default(0.0)
+  waktu_kejadian   DateTime
+  skala_bencana    DisasterScale
+  status           DisasterStatus @default(aktif)
+  deskripsi_dampak String?        @db.Text
+  created_at       DateTime       @default(now())
+  updated_at       DateTime       @updatedAt
+
+  permintaan       PermintaanRelawan[]
+  penugasan        Penugasan[]
+  laporan          LaporanKegiatan[]
+}
+
+model PermintaanRelawan {
+  id               String        @id @default(uuid())
+  bencana_id       String
+  keahlian_id      String
+  jumlah_relawan   Int
+  jumlah_terpenuhi Int           @default(0)
+  lokasi_penugasan String
+  tanggal_mulai    DateTime
+  tanggal_selesai  DateTime
+  deskripsi_tugas  String        @db.Text
+  status           RequestStatus @default(open)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+
+  bencana          Bencana       @relation(fields: [bencana_id], references: [id], onDelete: Cascade)
+  keahlian         Keahlian      @relation(fields: [keahlian_id], references: [id])
+}
+
+model Penugasan {
+  id               String           @id @default(uuid())
+  bencana_id       String
+  nama_tim         String
+  lokasi_penugasan String
+  tanggal_mulai    DateTime
+  tanggal_selesai  DateTime
+  status           AssignmentStatus @default(aktif)
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @updatedAt
+
+  bencana          Bencana          @relation(fields: [bencana_id], references: [id], onDelete: Cascade)
+  anggota          Relawan[]        @relation("RelawanToPenugasan")
+}
+
+model LaporanKegiatan {
+  id                      String   @id @default(uuid())
+  relawan_id              String
+  bencana_id              String
+  judul_laporan           String
+  deskripsi               String   @db.Text
+  jumlah_penerima_bantuan Int      @default(0)
+  kendala_lapangan        String?  @db.Text
+  foto_kegiatan           Json?    // Optional Array of image URLs/paths
+  latitude                Float?
+  longitude               Float?
+  created_at              DateTime @default(now())
+
+  relawan                 Relawan  @relation(fields: [relawan_id], references: [id], onDelete: Cascade)
+  bencana                 Bencana  @relation(fields: [bencana_id], references: [id], onDelete: Cascade)
+}
+
+model Logistik {
+  id                 String          @id @default(uuid())
+  nama_peralatan     String
+  kategori           String
+  stok               Int             @default(0)
+  lokasi_penyimpanan String
+  kondisi            KondisiLogistik @default(baik)
+  created_at         DateTime        @default(now())
+  updated_at         DateTime        @updatedAt
+}
+
+model MasterData {
+  id          String   @id @default(uuid())
+  kategori    String   // e.g 'JENIS_BENCANA', 'KATEGORI_LOGISTIK'
+  nilai       String   // e.g 'Gempa Bumi', 'Kelengkapan Regu'
+  deskripsi   String?  @db.Text
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  @@unique([kategori, nilai])
+}

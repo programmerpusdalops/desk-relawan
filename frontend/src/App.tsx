@@ -8,6 +8,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import RelawanPage from "./pages/RelawanPage";
 import OrganisasiPage from "./pages/OrganisasiPage";
@@ -22,26 +23,32 @@ import NotifikasiPage from "./pages/NotifikasiPage";
 import StatistikPage from "./pages/StatistikPage";
 import PenggunaPage from "./pages/PenggunaPage";
 import ProfilPage from "./pages/ProfilPage";
+import MasterDataPage from "./pages/MasterDataPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children, requiredRoles }: { children: React.ReactNode; requiredRoles?: string[] }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hasPermission = useAuthStore((s) => s.hasPermission);
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  
+  if (requiredRoles && !hasPermission(requiredRoles as any)) {
+    // Return unauthorized access to dashboard
+    return <Navigate to="/dashboard" replace />;
+  }
+  
   return <AppLayout>{children}</AppLayout>;
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
+  <BrowserRouter>
+    <Routes>
+      <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/relawan" element={<ProtectedRoute><RelawanPage /></ProtectedRoute>} />
           <Route path="/organisasi" element={<ProtectedRoute><OrganisasiPage /></ProtectedRoute>} />
           <Route path="/keahlian" element={<ProtectedRoute><KeahlianPage /></ProtectedRoute>} />
@@ -53,13 +60,12 @@ const App = () => (
           <Route path="/logistik" element={<ProtectedRoute><LogistikPage /></ProtectedRoute>} />
           <Route path="/notifikasi" element={<ProtectedRoute><NotifikasiPage /></ProtectedRoute>} />
           <Route path="/statistik" element={<ProtectedRoute><StatistikPage /></ProtectedRoute>} />
-          <Route path="/pengguna" element={<ProtectedRoute><PenggunaPage /></ProtectedRoute>} />
+          <Route path="/pengguna" element={<ProtectedRoute requiredRoles={['admin']}><PenggunaPage /></ProtectedRoute>} />
+          <Route path="/master-data" element={<ProtectedRoute requiredRoles={['admin', 'operator', 'pimpinan']}><MasterDataPage /></ProtectedRoute>} />
           <Route path="/profil" element={<ProtectedRoute><ProfilPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
 );
 
 export default App;

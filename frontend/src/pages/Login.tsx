@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import apiClient from '@/lib/api';
 
 /**
  * Login Page
@@ -26,34 +27,26 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Mock login - replace with apiClient.post('/auth/login', { email, password })
-    setTimeout(() => {
-      if (email === 'admin@bpbd.go.id') {
-        setAuth({
-          user: { id: '1', nama: 'Admin BPBD', email, role: 'admin', status: 'active', created_at: '' },
-          token: 'mock-token-admin',
-          role: 'admin',
-        });
-        navigate('/');
-      } else if (email === 'operator@bpbd.go.id') {
-        setAuth({
-          user: { id: '2', nama: 'Operator Desk', email, role: 'operator', status: 'active', created_at: '' },
-          token: 'mock-token-operator',
-          role: 'operator',
-        });
-        navigate('/');
-      } else if (email) {
-        setAuth({
-          user: { id: '3', nama: 'Relawan', email, role: 'relawan', status: 'active', created_at: '' },
-          token: 'mock-token-relawan',
-          role: 'relawan',
-        });
-        navigate('/');
-      } else {
-        toast({ title: 'Login Gagal', description: 'Email atau password salah', variant: 'destructive' });
-      }
+    try {
+      // Execute Real Backend Request
+      const response = await apiClient.post('/auth/login', { email, password });
+      
+      const { user, token, role } = response.data;
+
+      // Update state
+      setAuth({ user, token, role });
+      
+      toast({ title: 'Login Berhasil', description: `Selamat datang, ${user.nama}!` });
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast({ 
+        title: 'Login Gagal', 
+        description: error.response?.data?.message || 'Email atau password salah', 
+        variant: 'destructive' 
+      });
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   return (
